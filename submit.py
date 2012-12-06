@@ -20,16 +20,13 @@ def make_zip(zip_file_name):
                 fn = os.path.join(base, f)
                 zip.write(fn, fn[rootlen:])
             
-def scp_transfer(filename):
-    hostname = 'ec2-107-20-64-184.compute-1.amazonaws.com'
-    username = 'tech2014'
-    password = 'azontofiesta'
+def scp_transfer(zip_name,hostname,aws_username,password,assignment_name):
 
     ssh_client = paramiko.SSHClient()
     ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh_client.connect(hostname, username=username, key_filename=None, password=password)
+    ssh_client.connect(hostname, username=aws_username, key_filename=None, password=password)
     sftp = ssh_client.open_sftp()
-    sftp.put(filename, filename)
+    sftp.put(zip_name, "%s/%s" % (assignment_name,zip_name))#'~/' + assignment_name + '/' + filename)
     sftp.close()
     ssh_client.close()
 
@@ -59,14 +56,25 @@ users = ['godwin.adjaho',
          'gbeila.aliu.wahab',
          'yaw.boakye.yiadom']
 
-def main():
-    name = raw_input('What is your mest user_name (same as e-mail)\n')
-    if name not in users:
+def main(users):
+    username = raw_input('What is your mest user_name (same as e-mail)\n')
+    if username not in users:
         print 'Please enter a name from the following %s' % str(names)
         sys.exit(1)
-    zip_name = '%s.zip' % name
+    hostname = 'ec2-107-20-64-184.compute-1.amazonaws.com'
+    aws_username = 'tech2014'
+    password = 'azontofiesta'
+    zip_name = '%s.zip' % username
+    #NOTE: THE FOLLOWING SHOULD BE CHANGED WITH EACH ASSIGNMENT
+    assignment_name = 'currencyAssignment'
     make_zip(zip_name)
-    scp_transfer(zip_name)
+    scp_transfer(zip_name=zip_name,hostname=hostname,aws_username=aws_username,
+                 password=password,assignment_name=assignment_name)
 
 if __name__ == '__main__':
-    main()
+    #Currently, users is hardcoded.  To be changed in the future.
+    #Perhaps takes a command line argument
+    if users:
+        main(users)
+    else:
+        pass
