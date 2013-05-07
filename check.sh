@@ -2,7 +2,7 @@ EIT=$1
 ASSIGNMENT=$2
 OUTDIR="./$ASSIGNMENT/$EIT"
 EMAIL="ben@meltwater.org"
-PASSWORD="2msterDAM"
+PASSWORD="mysecret"
 DOMAIN="localhost:8080"
 echo $OUTDIR
 rm -fr $OUTDIR
